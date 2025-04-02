@@ -1,60 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import supabase from './supabaseClient';
-
-// New interfaces to match the Translink API response
-interface Position {
-  lat: number;
-  lng: number;
-}
-
-interface Route {
-  regionName: string;
-  id: string;
-  name: string;
-  headSign: string;
-  direction: string;
-}
-
-interface Realtime {
-  expectedDepartureUtc: string;
-  isExtra: boolean;
-  isSkipped: boolean;
-  isCancelled: boolean;
-}
-
-interface Departure {
-  id: string;
-  routeId: string;
-  headsign: string;
-  direction: string;
-  scheduledDepartureUtc: string;
-  departureDescription: string;
-  canBoardDebark: string;
-  realtime?: Realtime;
-}
-
-interface ServiceAlerts {
-  at: string;
-  current: any[];
-  upcoming: any[];
-}
-
-interface StopData {
-  id: string;
-  name: string;
-  zone: string;
-  position: Position;
-  routes: Route[];
-  departures: Departure[];
-  serviceAlerts: ServiceAlerts;
-}
-
-interface FavoriteStop {
-  id: string;
-  name: string;
-  stop_id: string;
-  user_id: string;
-}
+import { Route, StopData, FavoriteStop } from './types';
 
 // Helper function to calculate delay status
 const getDelayStatus = (scheduled: string, expected?: string): { status: string; className: string } => {
