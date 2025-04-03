@@ -39,15 +39,15 @@ export const DeparturesTable: React.FC<DeparturesTableProps> = ({ departures, fi
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full">
-        <thead className="bg-gray-50">
+      <table className="w-full border-collapse">
+        <thead className="bg-gray-50 border-b border-gray-200">
           <tr>
-            <th className="py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Route</th>
-            <th className="py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Departing In</th>
-            <th className="py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            <th className="py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Route</th>
+            <th className="py-2 text-xs font-medium text-gray-500 uppercase tracking-wider border-x border-gray-200">Departing In</th>
+            <th className="py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
+        <tbody className="bg-white">
           {departures.slice(0, 5).map((departure) => {
             const delayStatus = getDelayStatus(
               departure.scheduledDepartureUtc, 
@@ -59,7 +59,7 @@ export const DeparturesTable: React.FC<DeparturesTableProps> = ({ departures, fi
                 <td className="py-2 text-sm">
                   <span className="font-medium">{departure.headsign}</span>
                 </td>
-                <td className="py-2 text-sm">
+                <td className="py-2 text-sm border-x border-gray-200">
                   {departure.departureDescription}
                 </td>
                 <td className="py-2 text-sm">
