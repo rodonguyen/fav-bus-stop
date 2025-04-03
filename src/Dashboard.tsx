@@ -1,23 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import supabase from './supabaseClient';
 import { Route, StopData, FavoriteStop } from './types';
-
-// Helper function to calculate delay status
-const getDelayStatus = (scheduled: string, expected?: string): { status: string; className: string } => {
-  if (!expected) return { status: 'Scheduled', className: 'text-gray-600' };
-  
-  const scheduledTime = new Date(scheduled).getTime();
-  const expectedTime = new Date(expected).getTime();
-  const diffMinutes = Math.round((expectedTime - scheduledTime) / 60000);
-  
-  if (diffMinutes > 1) {
-    return { status: `Late (${diffMinutes} min)`, className: 'text-red-600' };
-  } else if (diffMinutes < -1) {
-    return { status: `Early (${Math.abs(diffMinutes)} min)`, className: 'text-green-600' };
-  } else {
-    return { status: 'On time', className: 'text-blue-600' };
-  }
-};
+import { DeparturesTable } from './components/DeparturesTable';
+import { AddStopForm } from './components/AddStopForm';
+import { AddButton } from './components/AddButton';
 
 function Dashboard() {
   const [favoriteStops, setFavoriteStops] = useState<FavoriteStop[]>([]);
@@ -151,44 +137,18 @@ function Dashboard() {
     <div className="p-4 bg-gray-100 min-h-screen">
       <h1 className="text-3xl font-bold text-center mb-6">Your Favorite Bus Stops</h1>
       
-      {/* Add Button */}
-      <div className="mb-4 flex justify-end">
-        <button 
-          onClick={() => setIsAddingStop(!isAddingStop)}
-          className="p-2 bg-blue-500 text-white rounded-full shadow-md hover:bg-blue-600 transition-colors"
-        >
-          {isAddingStop ? '×' : '+'}
-        </button>
-      </div>
+      <AddButton isAddingStop={isAddingStop} onClick={() => setIsAddingStop(!isAddingStop)} />
       
-      {/* Add Stop Form */}
       {isAddingStop && (
-        <div className="bg-white p-4 rounded-lg shadow-md mb-4">
-          <h2 className="text-xl font-semibold mb-2">Add Favorite Stop</h2>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={stopUrl}
-              onChange={(e) => setStopUrl(e.target.value)}
-              placeholder="Enter Translink stop URL"
-              className="flex-1 p-2 border rounded"
-            />
-            <button
-              onClick={addFavoriteStop}
-              disabled={loading}
-              className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors disabled:opacity-50"
-            >
-              {loading ? 'Adding...' : 'Add'}
-            </button>
-          </div>
-          <p className="text-sm text-gray-500 mt-1">
-            Example: https://jp.translink.com.au/plan-your-journey/stops/002023
-          </p>
-        </div>
+        <AddStopForm
+          stopUrl={stopUrl}
+          setStopUrl={setStopUrl}
+          onAdd={addFavoriteStop}
+          loading={loading}
+        />
       )}
       
-      {/* Favorite Stops List */}
-      <ul className="space-y-4">
+      <ul className="space-y-4 list-none">
         {favoriteStops.length === 0 ? (
           <li className="p-4 bg-white rounded-lg shadow-md text-center">
             No favorite stops yet. Add your first stop with the + button.
@@ -199,7 +159,6 @@ function Dashboard() {
               <div className="flex justify-between items-center mb-3">
                 <div>
                   <h2 className="text-xl font-semibold">{stop.name}</h2>
-                  <p className="text-sm text-gray-500">Stop ID: {stop.stop_id}</p>
                 </div>
                 <button 
                   onClick={() => deleteFavoriteStop(stop.id)}
@@ -213,56 +172,11 @@ function Dashboard() {
                 <div className="text-center py-4">
                   <p className="text-gray-500">Loading bus schedules...</p>
                 </div>
-              ) : stopData[stop.stop_id].departures.length === 0 ? (
-                <div className="text-center py-4">
-                  <p className="text-gray-500">No upcoming buses at this stop</p>
-                </div>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead className="bg-gray-50">
-                      <tr>
-                        <th className="py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Route</th>
-                        <th className="py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Departing In</th>
-                        <th className="py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                      {stopData[stop.stop_id].departures.slice(0, 5).map((departure) => {
-                        const route = findRouteDetails(stopData[stop.stop_id], departure.routeId);
-                        const delayStatus = getDelayStatus(
-                          departure.scheduledDepartureUtc, 
-                          departure.realtime?.expectedDepartureUtc
-                        );
-                        
-                        return (
-                          <tr key={departure.id}>
-                            <td className="py-2 text-sm">
-                              <span className="font-medium">{departure.headsign}</span>
-                              {route && (
-                                <span className="block text-xs text-gray-500 truncate max-w-[200px]">
-                                  {route.name}
-                                </span>
-                              )}
-                            </td>
-                            <td className="py-2 text-sm">
-                              {departure.departureDescription}
-                            </td>
-                            <td className="py-2 text-sm">
-                              {departure.realtime?.isCancelled ? (
-                                <span className="text-red-700 font-medium">Cancelled</span>
-                              ) : departure.realtime?.isSkipped ? (
-                                <span className="text-orange-600 font-medium">Skipped</span>
-                              ) : (
-                                <span className={delayStatus.className}>{delayStatus.status}</span>
-                              )}
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                </div>
+                <DeparturesTable
+                  departures={stopData[stop.stop_id].departures}
+                  findRouteDetails={(routeId) => findRouteDetails(stopData[stop.stop_id], routeId)}
+                />
               )}
             </li>
           ))
