@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import supabase from '../supabaseClient';
+import supabase from '../supabase/supabaseClient';
 import { Route, StopData, FavoriteStop } from '../types';
 import { DeparturesTable } from '../components/DeparturesTable';
 import { AddStopForm } from '../components/AddStopForm';

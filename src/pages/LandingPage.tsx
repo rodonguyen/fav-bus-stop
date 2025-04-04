@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import ThemeToggle from '../components/ThemeToggle';
-import Auth from '../Auth';
+import AuthModal from '../components/AuthModal';
 
 
 const LandingPage: React.FC = () => {
@@ -121,7 +121,7 @@ const LandingPage: React.FC = () => {
         </main>
       </div>
       
-      <Auth isOpen={isAuthModalOpen} onClose={handleCloseAuthModal} />
+      <AuthModal isOpen={isAuthModalOpen} onClose={handleCloseAuthModal} />
     </>
   );
 }

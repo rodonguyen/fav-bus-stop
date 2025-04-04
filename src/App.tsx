@@ -1,12 +1,12 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
-import supabase from './supabaseClient';
+import supabase from './supabase/supabaseClient';
 import Dashboard from './pages/Dashboard';
 import LandingPage from './pages/LandingPage';
 import { ThemeProvider } from './context/ThemeContext';
 import Footer from './components/Footer';
 
-function App() {
+const App: React.FC = () => {
   const [session, setSession] = useState<any>(null);
 
   useEffect(() => {
