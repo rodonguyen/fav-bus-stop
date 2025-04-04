@@ -1,0 +1,4 @@
+# Proxy API requests to Translink
+/api/*  https://jp.translink.com.au/api/:splat  200
+# Handle SPA routing
+/*  /index.html  200 
