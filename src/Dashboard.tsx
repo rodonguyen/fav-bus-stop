@@ -4,6 +4,7 @@ import { Route, StopData, FavoriteStop } from './types';
 import { DeparturesTable } from './components/DeparturesTable';
 import { AddStopForm } from './components/AddStopForm';
 import { AddButton } from './components/AddButton';
+import ThemeToggle from './components/ThemeToggle';
 
 function Dashboard() {
   const [favoriteStops, setFavoriteStops] = useState<FavoriteStop[]>([]);
@@ -136,9 +137,13 @@ function Dashboard() {
   return (
     <div className="min-h-screen">
       <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold text-center my-6">Your Favorite Bus Stops</h1>
+        <h1 className="text-3xl font-bold text-center my-4">Your Favorite Bus Stops</h1>
+
         
-        <AddButton isAddingStop={isAddingStop} onClick={() => setIsAddingStop(!isAddingStop)} />
+        <div className="flex justify-between items-center mb-6">
+          <ThemeToggle />
+          <AddButton isAddingStop={isAddingStop} onClick={() => setIsAddingStop(!isAddingStop)} />
+        </div>
         
         {isAddingStop && (
           <AddStopForm
@@ -158,9 +163,9 @@ function Dashboard() {
             </li>
           ) : (
             favoriteStops.map((stop) => (
-              <li key={stop.id} className="card p-2 bg-base-200 shadow-xl">
+              <li key={stop.id} className="card p-2 bg-base-300 shadow-xl">
                 <div className="card-body p-0">
-                  <div className="flex justify-between items-center p-4 border-b">
+                  <div className="flex justify-between items-center p-4 border-b space-x-4">
                     <h2 className="card-title">{stop.name}</h2>
                     <div className="card-actions">
                       <button 
