@@ -134,54 +134,63 @@ function Dashboard() {
   };
 
   return (
-    <div className="p-4 bg-gray-100 min-h-screen">
-      <h1 className="text-3xl font-bold text-center mb-6">Your Favorite Bus Stops</h1>
-      
-      <AddButton isAddingStop={isAddingStop} onClick={() => setIsAddingStop(!isAddingStop)} />
-      
-      {isAddingStop && (
-        <AddStopForm
-          stopUrl={stopUrl}
-          setStopUrl={setStopUrl}
-          onAdd={addFavoriteStop}
-          loading={loading}
-        />
-      )}
-      
-      <ul className="space-y-4 list-none">
-        {favoriteStops.length === 0 ? (
-          <li className="p-4 bg-white rounded-lg shadow-md text-center">
-            No favorite stops yet. Add your first stop with the + button.
-          </li>
-        ) : (
-          favoriteStops.map((stop) => (
-            <li key={stop.id} className="p-4 bg-white rounded-lg shadow-md">
-              <div className="flex justify-between items-center mb-3">
-                <div>
-                  <h2 className="text-xl font-semibold">{stop.name}</h2>
-                </div>
-                <button 
-                  onClick={() => deleteFavoriteStop(stop.id)}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  Remove
-                </button>
-              </div>
-              
-              {!stopData[stop.stop_id] ? (
-                <div className="text-center py-4">
-                  <p className="text-gray-500">Loading bus schedules...</p>
-                </div>
-              ) : (
-                <DeparturesTable
-                  departures={stopData[stop.stop_id].departures}
-                  findRouteDetails={(routeId) => findRouteDetails(stopData[stop.stop_id], routeId)}
-                />
-              )}
-            </li>
-          ))
+    <div className="min-h-screen">
+      <div className="container mx-auto p-4">
+        <h1 className="text-3xl font-bold text-center mb-6">Your Favorite Bus Stops</h1>
+        
+        <AddButton isAddingStop={isAddingStop} onClick={() => setIsAddingStop(!isAddingStop)} />
+        
+        {isAddingStop && (
+          <AddStopForm
+            stopUrl={stopUrl}
+            setStopUrl={setStopUrl}
+            onAdd={addFavoriteStop}
+            loading={loading}
+          />
         )}
-      </ul>
+        
+        <ul className="list-none space-y-6">
+          {favoriteStops.length === 0 ? (
+            <li className="card p-2 bg-base-200 shadow-xl">
+              <div className="card-body items-center text-center">
+                <p>No favorite stops yet. Add your first stop with the + button.</p>
+              </div>
+            </li>
+          ) : (
+            favoriteStops.map((stop) => (
+              <li key={stop.id} className="card p-2 bg-base-300 shadow-xl">
+                <div className="card-body p-0">
+                  <div className="flex justify-between items-center p-4 border-b">
+                    <h2 className="card-title">{stop.name}</h2>
+                    <div className="card-actions">
+                      <button 
+                        onClick={() => deleteFavoriteStop(stop.id)}
+                        className="btn btn-sm btn-outline btn-error"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <div className="p-4">
+                    {!stopData[stop.stop_id] ? (
+                      <div className="flex justify-center items-center py-4">
+                        <div className="loading loading-spinner loading-md"></div>
+                        <p className="ml-2 text-base-content/60">Loading bus schedules...</p>
+                      </div>
+                    ) : (
+                      <DeparturesTable
+                        departures={stopData[stop.stop_id].departures}
+                        findRouteDetails={(routeId) => findRouteDetails(stopData[stop.stop_id], routeId)}
+                      />
+                    )}
+                  </div>
+                </div>
+              </li>
+            ))
+          )}
+        </ul>
+      </div>
     </div>
   );
 }

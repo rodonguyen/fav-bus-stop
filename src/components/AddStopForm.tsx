@@ -14,27 +14,31 @@ export const AddStopForm: React.FC<AddStopFormProps> = ({
   loading 
 }) => {
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md mb-4">
-      <h2 className="text-xl font-semibold mb-2">Add Favorite Stop</h2>
-      <div className="flex gap-2">
-        <input
-          type="text"
-          value={stopUrl}
-          onChange={(e) => setStopUrl(e.target.value)}
-          placeholder="Enter Translink stop URL"
-          className="flex-1 p-2 border rounded"
-        />
-        <button
-          onClick={onAdd}
-          disabled={loading}
-          className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors disabled:opacity-50"
-        >
-          {loading ? 'Adding...' : 'Add'}
-        </button>
+    <div className="card bg-base-200 shadow-xl mb-6">
+      <div className="card-body">
+        <h2 className="card-title">Add Favorite Stop</h2>
+        <div className="form-control w-full">
+          <input
+            type="text"
+            value={stopUrl}
+            onChange={(e) => setStopUrl(e.target.value)}
+            placeholder="Enter Translink stop URL"
+            className="input input-bordered w-full"
+          />
+          <label className="label">
+            <span className="label-text-alt">Example: https://jp.translink.com.au/plan-your-journey/stops/002023</span>
+          </label>
+        </div>
+        <div className="card-actions justify-end mt-2">
+          <button
+            onClick={onAdd}
+            disabled={loading}
+            className="btn btn-primary"
+          >
+            {loading ? <span className="loading loading-spinner loading-sm"></span> : 'Add'}
+          </button>
+        </div>
       </div>
-      <p className="text-sm text-gray-500 mt-1">
-        Example: https://jp.translink.com.au/plan-your-journey/stops/002023
-      </p>
     </div>
   );
 }; 
