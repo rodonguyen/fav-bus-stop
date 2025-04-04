@@ -174,7 +174,7 @@ function Dashboard() {
                     <div className="card-actions">
                       <button 
                         onClick={() => deleteFavoriteStop(stop.id)}
-                        className="btn btn-sm btn-outline btn-error"
+                        className="btn btn-sm btn-outline"
                       >
                         Remove
                       </button>

@@ -17,17 +17,17 @@ export const AddStopForm: React.FC<AddStopFormProps> = ({
     <div className="card bg-base-200 shadow-xl mb-6">
       <div className="card-body">
         <h2 className="card-title">Add Favorite Stop</h2>
+        <p className="text-sm mb-2">Instructions: Go to <a href="https://jp.translink.com.au/plan-your-journey/stops" target="_blank" rel="noopener noreferrer" className="link link-primary">jp.translink.com.au/plan-your-journey/stops</a> to find your stop, copy and paste the URL address to the box below</p>
         <div className="form-control w-full">
           <input
             type="text"
             value={stopUrl}
             onChange={(e) => setStopUrl(e.target.value)}
-            placeholder="Enter Translink stop URL"
-            className="input input-bordered w-full"
+            placeholder="Paste URL here"
+            className="input input-bordered w-full my-2"
           />
-          <label className="label">
-            <span className="label-text-alt">Example: https://jp.translink.com.au/plan-your-journey/stops/002023</span>
-          </label>
+          <p className="text-base-content/80">Example: https://jp.translink.com.au/plan-your-journey/stops/002023
+          </p>
         </div>
         <div className="card-actions justify-end mt-2">
           <button
