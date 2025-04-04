@@ -4,6 +4,7 @@
 - X Landing page: why use FavStop
 - X Login with Google
 - Refresh/Online indicator
+- Try it now mode, allowing people to try it without login
 - Donate link
 - Add train station support
 - Donate/Subscribe to use 5+ stops
