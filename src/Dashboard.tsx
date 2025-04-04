@@ -136,7 +136,7 @@ function Dashboard() {
   return (
     <div className="min-h-screen">
       <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold text-center mb-6">Your Favorite Bus Stops</h1>
+        <h1 className="text-3xl font-bold text-center my-6">Your Favorite Bus Stops</h1>
         
         <AddButton isAddingStop={isAddingStop} onClick={() => setIsAddingStop(!isAddingStop)} />
         
@@ -158,7 +158,7 @@ function Dashboard() {
             </li>
           ) : (
             favoriteStops.map((stop) => (
-              <li key={stop.id} className="card p-2 bg-base-300 shadow-xl">
+              <li key={stop.id} className="card p-2 bg-base-200 shadow-xl">
                 <div className="card-body p-0">
                   <div className="flex justify-between items-center p-4 border-b">
                     <h2 className="card-title">{stop.name}</h2>
@@ -172,7 +172,7 @@ function Dashboard() {
                     </div>
                   </div>
                   
-                  <div className="p-4">
+                  <div className="px-4">
                     {!stopData[stop.stop_id] ? (
                       <div className="flex justify-center items-center py-4">
                         <div className="loading loading-spinner loading-md"></div>

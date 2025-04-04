@@ -32,14 +32,14 @@ export const DeparturesTable: React.FC<DeparturesTableProps> = ({ departures, fi
   if (departures.length === 0) {
     return (
       <div className="text-center py-4">
-        <p className="text-base-content/60">No upcoming buses at this stop</p>
+        <p className="text-base-content/80">No upcoming buses at this stop</p>
       </div>
     );
   }
 
   return (
     <div className="overflow-x-auto">
-      <table className="table table-zebra">
+      <table className="table">
         <thead>
           <tr>
             <th>Route</th>
