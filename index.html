@@ -9,8 +9,8 @@
       // Initialize theme from localStorage on page load
       (function() {
         const darkMode = localStorage.getItem('darkTheme');
-        // Use emerald (dark) theme if darkTheme is '1', otherwise use light theme
-        const theme = darkMode === '1' ? 'emerald' : 'light';
+        // Use dark theme if darkTheme is '1', otherwise use emerald theme
+        const theme = darkMode === '1' ? 'dark' : 'emerald';
         document.documentElement.setAttribute('data-theme', theme);
       })();
     </script>

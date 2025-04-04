@@ -5,6 +5,7 @@ import { DeparturesTable } from './components/DeparturesTable';
 import { AddStopForm } from './components/AddStopForm';
 import { AddButton } from './components/AddButton';
 import ThemeToggle from './components/ThemeToggle';
+import { useTheme } from './context/ThemeContext';
 
 function Dashboard() {
   const [favoriteStops, setFavoriteStops] = useState<FavoriteStop[]>([]);
@@ -12,6 +13,9 @@ function Dashboard() {
   const [isAddingStop, setIsAddingStop] = useState<boolean>(false);
   const [stopUrl, setStopUrl] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  
+  // Get theme state from context
+  const { isDarkTheme } = useTheme();
 
   useEffect(() => {
     const fetchFavoriteStops = async () => {
@@ -156,14 +160,14 @@ function Dashboard() {
         
         <ul className="list-none space-y-6">
           {favoriteStops.length === 0 ? (
-            <li className="card p-2 bg-base-200 shadow-xl">
+            <li className={`card p-2 ${isDarkTheme ? 'bg-base-300' : 'bg-base-100'} shadow-xl`}>
               <div className="card-body items-center text-center">
                 <p>No favorite stops yet. Add your first stop with the + button.</p>
               </div>
             </li>
           ) : (
             favoriteStops.map((stop) => (
-              <li key={stop.id} className="card p-2 bg-base-300 shadow-xl">
+              <li key={stop.id} className={`card p-2 ${isDarkTheme ? 'bg-base-300' : 'bg-base-100'} shadow-xl`}>
                 <div className="card-body p-0">
                   <div className="flex justify-between items-center p-4 border-b space-x-4">
                     <h2 className="card-title">{stop.name}</h2>

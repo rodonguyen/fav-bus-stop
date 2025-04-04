@@ -1,29 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useTheme } from '../context/ThemeContext';
 
 export const ThemeToggle: React.FC = () => {
-  // Get initial darkMode value from localStorage (1 for dark, 0 for light)
-  const [isDark, setIsDark] = useState<boolean>(() => {
-    const darkMode = localStorage.getItem('darkTheme');
-    return darkMode === '1';
-  });
-  
-  // Toggle between dark and light modes
-  const toggleTheme = () => {
-    setIsDark(!isDark);
-  };
-  
-  // Save darkTheme to localStorage and update HTML data-theme attribute
-  useEffect(() => {
-    localStorage.setItem('darkTheme', isDark ? '1' : '0');
-    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'emerald');
-  }, [isDark]);
+  const { isDarkTheme, toggleTheme } = useTheme();
   
   return (
     <label className="swap swap-rotate">
       {/* Hidden checkbox to control the state */}
       <input 
         type="checkbox" 
-        checked={!isDark} 
+        checked={!isDarkTheme} 
         onChange={toggleTheme}
         className="theme-controller"
       />

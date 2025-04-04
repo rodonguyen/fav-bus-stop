@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import supabase from './supabaseClient';
 import Auth from './Auth';
 import Dashboard from './Dashboard';
+import { ThemeProvider } from './context/ThemeContext';
 
 function App() {
   const [session, setSession] = useState<any>(null);
@@ -18,9 +19,11 @@ function App() {
   }, []);
 
   return (
-    <div>
-      {!session ? <Auth /> : <Dashboard />}
-    </div>
+    <ThemeProvider>
+      <div>
+        {!session ? <Auth /> : <Dashboard />}
+      </div>
+    </ThemeProvider>
   );
 }
 
