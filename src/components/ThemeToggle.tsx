@@ -1,11 +1,15 @@
 import React from 'react';
 import { useTheme } from '../context/ThemeContext';
 
-export const ThemeToggle: React.FC = () => {
+interface ThemeToggleProps {
+  className?: string;
+}
+
+export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '' }) => {
   const { isDarkTheme, toggleTheme } = useTheme();
   
   return (
-    <label className="swap swap-rotate">
+    <label className={`swap swap-rotate ${className}`}>
       {/* Hidden checkbox to control the state */}
       <input 
         type="checkbox" 

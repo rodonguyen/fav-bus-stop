@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import supabase from './supabaseClient';
-import { Route, StopData, FavoriteStop } from './types';
-import { DeparturesTable } from './components/DeparturesTable';
-import { AddStopForm } from './components/AddStopForm';
-import { AddButton } from './components/AddButton';
-import ThemeToggle from './components/ThemeToggle';
-import { useTheme } from './context/ThemeContext';
+import supabase from '../supabaseClient';
+import { Route, StopData, FavoriteStop } from '../types';
+import { DeparturesTable } from '../components/DeparturesTable';
+import { AddStopForm } from '../components/AddStopForm';
+import { AddButton } from '../components/AddButton';
+import ThemeToggle from '../components/ThemeToggle';
+import { useTheme } from '../context/ThemeContext';
 
-function Dashboard() {
+const Dashboard: React.FC = () => {
   const [favoriteStops, setFavoriteStops] = useState<FavoriteStop[]>([]);
   const [stopData, setStopData] = useState<Record<string, StopData>>({});
   const [isAddingStop, setIsAddingStop] = useState<boolean>(false);
@@ -35,7 +35,14 @@ function Dashboard() {
       const data: Record<string, StopData> = {};
       for (const stop of favoriteStops) {
         try {
-          const response = await fetch(`/api/stop/timetable/${stop.stop_id}`);
+          // Adjust the API path for both development and production
+          const apiPath = `/api/stop/timetable/${stop.stop_id}`;
+          const response = await fetch(apiPath);
+          
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          
           const stopData = await response.json();
           data[stop.stop_id] = stopData;
         } catch (error) {
@@ -70,8 +77,14 @@ function Dashboard() {
     }
 
     try {
-      // Fetch stop data from the API
-      const response = await fetch(`/api/stop/timetable/${stopId}`);
+      // Fetch stop data from the API using consistent approach
+      const apiPath = `/api/stop/timetable/${stopId}`;
+      const response = await fetch(apiPath);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      
       const stopData = await response.json();
       
       if (!stopData || !stopData.name) {
@@ -139,69 +152,66 @@ function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen">
-      <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold text-center my-4">Your Favorite Bus Stops</h1>
-
-        
-        <div className="flex justify-between items-center mb-6">
-          <ThemeToggle />
-          <AddButton isAddingStop={isAddingStop} onClick={() => setIsAddingStop(!isAddingStop)} />
-        </div>
-        
-        {isAddingStop && (
-          <AddStopForm
-            stopUrl={stopUrl}
-            setStopUrl={setStopUrl}
-            onAdd={addFavoriteStop}
-            loading={loading}
-          />
-        )}
-        
-        <ul className="list-none space-y-6">
-          {favoriteStops.length === 0 ? (
-            <li className={`card p-2 ${isDarkTheme ? 'bg-base-300' : 'bg-base-100'} shadow-xl`}>
-              <div className="card-body items-center text-center">
-                <p>No favorite stops yet. Add your first stop with the + button.</p>
-              </div>
-            </li>
-          ) : (
-            favoriteStops.map((stop) => (
-              <li key={stop.id} className={`card p-2 ${isDarkTheme ? 'bg-base-300' : 'bg-base-100'} shadow-xl`}>
-                <div className="card-body p-0">
-                  <div className="flex justify-between items-center p-4 border-b space-x-4">
-                    <h2 className="card-title">{stop.name}</h2>
-                    <div className="card-actions">
-                      <button 
-                        onClick={() => deleteFavoriteStop(stop.id)}
-                        className="btn btn-sm btn-outline"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div className="px-4">
-                    {!stopData[stop.stop_id] ? (
-                      <div className="flex justify-center items-center py-4">
-                        <div className="loading loading-spinner loading-md"></div>
-                        <p className="ml-2 text-base-content/60">Loading bus schedules...</p>
-                      </div>
-                    ) : (
-                      <DeparturesTable
-                        departures={stopData[stop.stop_id].departures}
-                        findRouteDetails={(routeId) => findRouteDetails(stopData[stop.stop_id], routeId)}
-                      />
-                    )}
+    <div className="container mx-auto p-4 max-w-3xl">
+      <h1 className="text-3xl font-bold text-center my-4">Your Favorite Stops</h1>
+      
+      <div className="flex justify-between items-center mb-6">
+        <ThemeToggle />
+        <AddButton isAddingStop={isAddingStop} onClick={() => setIsAddingStop(!isAddingStop)} />
+      </div>
+      
+      {isAddingStop && (
+        <AddStopForm
+          stopUrl={stopUrl}
+          setStopUrl={setStopUrl}
+          onAdd={addFavoriteStop}
+          loading={loading}
+        />
+      )}
+      
+      <ul className="list-none space-y-6">
+        {favoriteStops.length === 0 ? (
+          <li className={`card p-2 ${isDarkTheme ? 'bg-base-300' : 'bg-base-100'} shadow-xl`}>
+            <div className="card-body items-center text-center">
+              <p>No favorite stops yet. Add your first stop with the + button.</p>
+            </div>
+          </li>
+        ) : (
+          favoriteStops.map((stop) => (
+            <li key={stop.id} className={`card p-2 ${isDarkTheme ? 'bg-base-300' : 'bg-base-100'} shadow-xl`}>
+              <div className="card-body p-0">
+                <div className="flex justify-between items-center p-4 border-b space-x-4">
+                  <h2 className="card-title">{stop.name}</h2>
+                  <div className="card-actions">
+                    <button 
+                      onClick={() => deleteFavoriteStop(stop.id)}
+                      className="btn btn-sm btn-outline"
+                    >
+                      Remove
+                    </button>
                   </div>
                 </div>
-              </li>
-            ))
-          )}
-        </ul>
-      </div>
+                
+                <div className="px-4">
+                  {!stopData[stop.stop_id] ? (
+                    <div className="flex justify-center items-center py-4">
+                      <div className="loading loading-spinner loading-md"></div>
+                      <p className="ml-2 text-base-content/60">Loading bus schedules...</p>
+                    </div>
+                  ) : (
+                    <DeparturesTable
+                      departures={stopData[stop.stop_id].departures}
+                      findRouteDetails={(routeId) => findRouteDetails(stopData[stop.stop_id], routeId)}
+                    />
+                  )}
+                </div>
+              </div>
+            </li>
+          ))
+        )}
+      </ul>
     </div>
   );
 }
 
-export default Dashboard; 
+export default Dashboard;

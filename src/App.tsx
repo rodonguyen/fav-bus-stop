@@ -1,8 +1,8 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import supabase from './supabaseClient';
-import Auth from './Auth';
-import Dashboard from './Dashboard';
+import Dashboard from './pages/Dashboard';
+import LandingPage from './pages/LandingPage';
 import { ThemeProvider } from './context/ThemeContext';
 import Footer from './components/Footer';
 
@@ -23,7 +23,7 @@ function App() {
     <ThemeProvider>
       <div className="min-h-screen flex flex-col">
         <div className="flex-grow">
-          {!session ? <Auth /> : <Dashboard />}
+          {!session ? <LandingPage /> : <Dashboard />}
         </div>
         <Footer />
       </div>
