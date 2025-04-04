@@ -4,6 +4,7 @@ import supabase from './supabaseClient';
 import Auth from './Auth';
 import Dashboard from './Dashboard';
 import { ThemeProvider } from './context/ThemeContext';
+import Footer from './components/Footer';
 
 function App() {
   const [session, setSession] = useState<any>(null);
@@ -20,8 +21,11 @@ function App() {
 
   return (
     <ThemeProvider>
-      <div>
-        {!session ? <Auth /> : <Dashboard />}
+      <div className="min-h-screen flex flex-col">
+        <div className="flex-grow">
+          {!session ? <Auth /> : <Dashboard />}
+        </div>
+        <Footer />
       </div>
     </ThemeProvider>
   );
