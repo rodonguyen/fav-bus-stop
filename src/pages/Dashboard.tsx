@@ -22,9 +22,12 @@ const Dashboard: React.FC = () => {
     },
   });
 
-  const fetchStopData = async () => {
+  const fetchStopData = async (stopsToFetch?: FavoriteStop[]) => {
     const data: Record<string, StopTimetable> = {};
-    for (const stop of favoriteStops) {
+    // Use passed stops or fall back to state if not provided
+    const stops = stopsToFetch || favoriteStops;
+
+    for (const stop of stops) {
       try {
         const stopTimetable = await translinkApi.getStopTimetable(stop.stop_id);
         data[stop.stop_id] = stopTimetable;
@@ -42,9 +45,15 @@ const Dashboard: React.FC = () => {
     const fetchFavoriteStops = async () => {
       const stops = await supabaseApi.getFavoriteStops();
       setFavoriteStops(stops);
+
+      // Fetch stop data immediately after getting favorite stops
+      if (stops.length > 0) {
+        await fetchStopData(stops);
+      }
     };
 
     fetchFavoriteStops();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const extractStopId = (url: string): string | null => {
@@ -109,9 +118,9 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4 max-w-3xl">
-      <h1 className="text-3xl font-bold text-center my-4">Your Favorite Stops</h1>
+      <h1 className="text-3xl font-bold text-center mt-4 mb-8">Your Favorite Stops</h1>
 
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-2">
         <ThemeToggle />
         <div className="flex items-center gap-3">
           <div
