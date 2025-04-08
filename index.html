@@ -1,19 +1,10 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Fav Stop</title>
-    <script>
-      // Initialize theme from localStorage on page load
-      (function() {
-        const darkMode = localStorage.getItem('darkTheme');
-        // Use dark theme if darkTheme is '1', otherwise use emerald theme
-        const theme = darkMode === '1' ? 'dark' : 'emerald';
-        document.documentElement.setAttribute('data-theme', theme);
-      })();
-    </script>
+    <title>Fav Bus Stop</title>
   </head>
   <body>
     <div id="root"></div>

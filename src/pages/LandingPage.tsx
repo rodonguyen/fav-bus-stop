@@ -16,7 +16,7 @@ const LandingPage: React.FC = () => {
     setIsAuthModalOpen(false);
   };
 
-  return (
+  return ( 
     <>
       <div className="container mx-auto">
         <header className="flex justify-between items-center mb-12 p-8 lg:max-w-4xl lg:mx-auto relative">
