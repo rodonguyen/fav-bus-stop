@@ -5,6 +5,7 @@ import { AddStopForm } from '../components/AddStopForm';
 import { DeparturesTable } from '../components/DeparturesTable';
 import ThemeToggle from '../components/ThemeToggle';
 import { useTheme } from '../context/ThemeContext';
+import useRefreshTimer from '../hooks/useRefreshTimer';
 import supabase from '../supabase/supabaseClient';
 import { FavoriteStop, Route, StopData } from '../types';
 
@@ -14,6 +15,31 @@ const Dashboard: React.FC = () => {
   const [isAddingStop, setIsAddingStop] = useState<boolean>(false);
   const [stopUrl, setStopUrl] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const { progress } = useRefreshTimer({
+    onComplete: async () => {
+      await fetchStopData();
+    },
+  });
+
+  const fetchStopData = async () => {
+    const data: Record<string, StopData> = {};
+    for (const stop of favoriteStops) {
+      try {
+        const apiPath = `/api/stop/timetable/${stop.stop_id}`;
+        const response = await fetch(apiPath);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const stopData = await response.json();
+        data[stop.stop_id] = stopData;
+      } catch (error) {
+        console.error(`Error fetching data for stop ${stop.stop_id}:`, error);
+      }
+    }
+    setStopData(data);
+  };
 
   // Get theme state from context
   const { isDarkTheme } = useTheme();
@@ -30,35 +56,6 @@ const Dashboard: React.FC = () => {
 
     fetchFavoriteStops();
   }, []);
-
-  useEffect(() => {
-    const fetchStopData = async () => {
-      const data: Record<string, StopData> = {};
-      for (const stop of favoriteStops) {
-        try {
-          // Adjust the API path for both development and production
-          const apiPath = `/api/stop/timetable/${stop.stop_id}`;
-          const response = await fetch(apiPath);
-
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-
-          const stopData = await response.json();
-          data[stop.stop_id] = stopData;
-        } catch (error) {
-          console.error(`Error fetching data for stop ${stop.stop_id}:`, error);
-        }
-      }
-      setStopData(data);
-    };
-
-    if (favoriteStops.length > 0) {
-      fetchStopData();
-      const interval = setInterval(fetchStopData, 5000);
-      return () => clearInterval(interval);
-    }
-  }, [favoriteStops]);
 
   const extractStopId = (url: string): string | null => {
     // Extract stop ID from URLs like https://jp.translink.com.au/plan-your-journey/stops/002023
@@ -160,6 +157,7 @@ const Dashboard: React.FC = () => {
         <AddButton isAddingStop={isAddingStop} onClick={() => setIsAddingStop(!isAddingStop)} />
       </div>
 
+      <div className="radial-progress" style={{ '--value': progress } as React.CSSProperties} role="progressbar"></div>
       {isAddingStop && (
         <AddStopForm stopUrl={stopUrl} setStopUrl={setStopUrl} onAdd={addFavoriteStop} loading={loading} />
       )}
