@@ -4,7 +4,8 @@
 
 - X Landing page: why use FavStop
 - X Login with Google
-- Refresh/Online indicator
+- X Refresh/Online indicator
+- Replace author content, refactor some color for each theme (using tailwind classname)
 - Add hour column
 - Try it now mode, allowing people to try it without login
 - Donate link
