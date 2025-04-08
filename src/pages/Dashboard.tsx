@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 
+import { supabaseApi } from '../api/supabaseApi';
+import { translinkApi } from '../api/translinkApi';
 import { AddButton } from '../components/AddButton';
 import { AddStopForm } from '../components/AddStopForm';
 import { DeparturesTable } from '../components/DeparturesTable';
 import ThemeToggle from '../components/ThemeToggle';
 import { useTheme } from '../context/ThemeContext';
 import useRefreshTimer from '../hooks/useRefreshTimer';
-import supabase from '../supabase/supabaseClient';
-import { FavoriteStop, Route, StopData } from '../types';
+import { FavoriteStop, Route, StopTimetable } from '../types';
 
 const Dashboard: React.FC = () => {
   const [favoriteStops, setFavoriteStops] = useState<FavoriteStop[]>([]);
-  const [stopData, setStopData] = useState<Record<string, StopData>>({});
+  const [stopData, setStopData] = useState<Record<string, StopTimetable>>({});
   const [isAddingStop, setIsAddingStop] = useState<boolean>(false);
   const [stopUrl, setStopUrl] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -22,18 +23,11 @@ const Dashboard: React.FC = () => {
   });
 
   const fetchStopData = async () => {
-    const data: Record<string, StopData> = {};
+    const data: Record<string, StopTimetable> = {};
     for (const stop of favoriteStops) {
       try {
-        const apiPath = `/api/stop/timetable/${stop.stop_id}`;
-        const response = await fetch(apiPath);
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const stopData = await response.json();
-        data[stop.stop_id] = stopData;
+        const stopTimetable = await translinkApi.getStopTimetable(stop.stop_id);
+        data[stop.stop_id] = stopTimetable;
       } catch (error) {
         console.error(`Error fetching data for stop ${stop.stop_id}:`, error);
       }
@@ -46,12 +40,8 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     const fetchFavoriteStops = async () => {
-      const { data, error } = await supabase.from('favorite_stops').select('*');
-      if (error) {
-        console.error('Error fetching favorite stops:', error);
-      } else {
-        setFavoriteStops(data || []);
-      }
+      const stops = await supabaseApi.getFavoriteStops();
+      setFavoriteStops(stops);
     };
 
     fetchFavoriteStops();
@@ -75,53 +65,23 @@ const Dashboard: React.FC = () => {
     }
 
     try {
-      // Fetch stop data from the API using consistent approach
-      const apiPath = `/api/stop/timetable/${stopId}`;
-      const response = await fetch(apiPath);
+      // Fetch stop data from the API
+      const stopTimetable = await translinkApi.getStopTimetable(stopId);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const stopData = await response.json();
-
-      if (!stopData || !stopData.name) {
+      if (!stopTimetable || !stopTimetable.name) {
         alert('Could not fetch stop information. Please try again.');
         setLoading(false);
         return;
       }
 
-      // Get current user ID
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      const userId = session?.user.id;
+      // Add to favorites using supabaseApi
+      await supabaseApi.addFavoriteStop(stopId, stopTimetable.name);
 
-      if (!userId) {
-        alert('You must be logged in to add favorites.');
-        setLoading(false);
-        return;
-      }
-
-      // Add to Supabase
-      const { error } = await supabase.from('favorite_stops').insert([
-        {
-          stop_id: stopId,
-          name: stopData.name,
-          user_id: userId,
-        },
-      ]);
-
-      if (error) {
-        console.error('Error adding favorite stop:', error);
-        alert('Failed to add stop to favorites.');
-      } else {
-        // Refresh favorites
-        const { data: favorites } = await supabase.from('favorite_stops').select('*');
-        setFavoriteStops(favorites || []);
-        setStopUrl('');
-        setIsAddingStop(false);
-      }
+      // Refresh favorites
+      const favorites = await supabaseApi.getFavoriteStops();
+      setFavoriteStops(favorites);
+      setStopUrl('');
+      setIsAddingStop(false);
     } catch (error) {
       console.error('Error:', error);
       alert('Failed to add stop to favorites.');
@@ -132,19 +92,18 @@ const Dashboard: React.FC = () => {
 
   const deleteFavoriteStop = async (stopId: string) => {
     if (confirm('Are you sure you want to remove this stop from your favorites?')) {
-      const { error } = await supabase.from('favorite_stops').delete().match({ id: stopId });
-
-      if (error) {
+      try {
+        await supabaseApi.deleteFavoriteStop(stopId);
+        setFavoriteStops(favoriteStops.filter((stop) => stop.id !== stopId));
+      } catch (error) {
         console.error('Error deleting stop:', error);
         alert('Failed to delete stop.');
-      } else {
-        setFavoriteStops(favoriteStops.filter((stop) => stop.id !== stopId));
       }
     }
   };
 
   // Find the route details for a departure
-  const findRouteDetails = (stopData: StopData, routeId: string): Route | undefined => {
+  const findRouteDetails = (stopData: StopTimetable, routeId: string): Route | undefined => {
     return stopData.routes.find((route) => route.id === routeId);
   };
 

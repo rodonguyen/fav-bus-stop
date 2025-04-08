@@ -37,7 +37,7 @@ export interface ServiceAlerts {
   upcoming: any[];
 }
 
-export interface StopData {
+export interface StopTimetable {
   id: string;
   name: string;
   zone: string;
