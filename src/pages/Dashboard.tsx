@@ -113,10 +113,16 @@ const Dashboard: React.FC = () => {
 
       <div className="flex justify-between items-center mb-6">
         <ThemeToggle />
-        <AddButton isAddingStop={isAddingStop} onClick={() => setIsAddingStop(!isAddingStop)} />
+        <div className="flex items-center gap-3">
+          <div
+            className="radial-progress text-primary"
+            style={{ '--value': progress, '--size': '2.4rem', '--thickness': '0.6rem' } as React.CSSProperties}
+            role="progressbar"
+          ></div>
+          <AddButton className="my-auto" isAddingStop={isAddingStop} onClick={() => setIsAddingStop(!isAddingStop)} />
+        </div>
       </div>
 
-      <div className="radial-progress" style={{ '--value': progress } as React.CSSProperties} role="progressbar"></div>
       {isAddingStop && (
         <AddStopForm stopUrl={stopUrl} setStopUrl={setStopUrl} onAdd={addFavoriteStop} loading={loading} />
       )}
