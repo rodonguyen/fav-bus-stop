@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Departure, Route } from '../types';
 
 interface DeparturesTableProps {
@@ -14,11 +15,11 @@ interface DeparturesTableProps {
  */
 const getDelayStatus = (scheduled: string, expected?: string): { status: string; className: string } => {
   if (!expected) return { status: 'Scheduled', className: 'text-base-content/60' };
-  
+
   const scheduledTime = new Date(scheduled).getTime();
   const expectedTime = new Date(expected).getTime();
   const diffMinutes = Math.round((expectedTime - scheduledTime) / 60000);
-  
+
   if (diffMinutes > 1) {
     return { status: `Late (${diffMinutes} min)`, className: 'text-error' };
   } else if (diffMinutes < -1) {
@@ -50,18 +51,14 @@ export const DeparturesTable: React.FC<DeparturesTableProps> = ({ departures, fi
         <tbody>
           {departures.slice(0, 5).map((departure) => {
             const delayStatus = getDelayStatus(
-              departure.scheduledDepartureUtc, 
+              departure.scheduledDepartureUtc,
               departure.realtime?.expectedDepartureUtc
             );
-            
+
             return (
               <tr key={departure.id}>
-                <td className="font-medium">
-                  {departure.headsign}
-                </td>
-                <td>
-                  {departure.departureDescription}
-                </td>
+                <td className="font-medium">{departure.headsign}</td>
+                <td>{departure.departureDescription}</td>
                 <td className="text-right">
                   {departure.realtime?.isCancelled ? (
                     <span className="text-error font-medium">Cancelled</span>
@@ -78,4 +75,4 @@ export const DeparturesTable: React.FC<DeparturesTableProps> = ({ departures, fi
       </table>
     </div>
   );
-}; 
+};

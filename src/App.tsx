@@ -1,11 +1,12 @@
-import './App.css';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider } from './context/ThemeContext';
-import { AuthProvider, useAuth } from './context/AuthContext';
-import Dashboard from './pages/Dashboard';
-import Footer from './components/Footer';
-import LandingPage from './pages/LandingPage';
 import React from 'react';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+
+import './App.css';
+import Footer from './components/Footer';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
+import Dashboard from './pages/Dashboard';
+import LandingPage from './pages/LandingPage';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -28,26 +29,26 @@ const AppRoutes: React.FC = () => {
   const { isLoading: isLoadingAuth } = useAuth();
 
   if (isLoadingAuth) {
-    return (<></>);
+    return <></>;
   }
 
   return (
     <Routes>
-      <Route 
-        path="/" 
+      <Route
+        path="/"
         element={
           <PublicRoute>
             <LandingPage />
           </PublicRoute>
-        } 
+        }
       />
-      <Route 
-        path="/dashboard" 
+      <Route
+        path="/dashboard"
         element={
           <ProtectedRoute>
             <Dashboard />
           </ProtectedRoute>
-        } 
+        }
       />
     </Routes>
   );
@@ -70,4 +71,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App; 
+export default App;

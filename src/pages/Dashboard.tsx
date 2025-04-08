@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import supabase from '../supabase/supabaseClient';
-import { Route, StopData, FavoriteStop } from '../types';
-import { DeparturesTable } from '../components/DeparturesTable';
-import { AddStopForm } from '../components/AddStopForm';
+import React, { useEffect, useState } from 'react';
+
 import { AddButton } from '../components/AddButton';
+import { AddStopForm } from '../components/AddStopForm';
+import { DeparturesTable } from '../components/DeparturesTable';
 import ThemeToggle from '../components/ThemeToggle';
 import { useTheme } from '../context/ThemeContext';
+import supabase from '../supabase/supabaseClient';
+import { FavoriteStop, Route, StopData } from '../types';
 
 const Dashboard: React.FC = () => {
   const [favoriteStops, setFavoriteStops] = useState<FavoriteStop[]>([]);
@@ -13,7 +14,7 @@ const Dashboard: React.FC = () => {
   const [isAddingStop, setIsAddingStop] = useState<boolean>(false);
   const [stopUrl, setStopUrl] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  
+
   // Get theme state from context
   const { isDarkTheme } = useTheme();
 
@@ -38,11 +39,11 @@ const Dashboard: React.FC = () => {
           // Adjust the API path for both development and production
           const apiPath = `/api/stop/timetable/${stop.stop_id}`;
           const response = await fetch(apiPath);
-          
+
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
           }
-          
+
           const stopData = await response.json();
           data[stop.stop_id] = stopData;
         } catch (error) {
@@ -68,7 +69,7 @@ const Dashboard: React.FC = () => {
 
   const addFavoriteStop = async () => {
     setLoading(true);
-    
+
     const stopId = extractStopId(stopUrl);
     if (!stopId) {
       alert('Invalid URL. Please enter a valid Translink stop URL.');
@@ -80,38 +81,40 @@ const Dashboard: React.FC = () => {
       // Fetch stop data from the API using consistent approach
       const apiPath = `/api/stop/timetable/${stopId}`;
       const response = await fetch(apiPath);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-      
+
       const stopData = await response.json();
-      
+
       if (!stopData || !stopData.name) {
         alert('Could not fetch stop information. Please try again.');
         setLoading(false);
         return;
       }
-      
+
       // Get current user ID
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       const userId = session?.user.id;
-      
+
       if (!userId) {
         alert('You must be logged in to add favorites.');
         setLoading(false);
         return;
       }
-      
+
       // Add to Supabase
       const { error } = await supabase.from('favorite_stops').insert([
-        { 
+        {
           stop_id: stopId,
           name: stopData.name,
-          user_id: userId
-        }
+          user_id: userId,
+        },
       ]);
-      
+
       if (error) {
         console.error('Error adding favorite stop:', error);
         alert('Failed to add stop to favorites.');
@@ -126,49 +129,41 @@ const Dashboard: React.FC = () => {
       console.error('Error:', error);
       alert('Failed to add stop to favorites.');
     }
-    
+
     setLoading(false);
   };
 
   const deleteFavoriteStop = async (stopId: string) => {
     if (confirm('Are you sure you want to remove this stop from your favorites?')) {
-      const { error } = await supabase
-        .from('favorite_stops')
-        .delete()
-        .match({ id: stopId });
-      
+      const { error } = await supabase.from('favorite_stops').delete().match({ id: stopId });
+
       if (error) {
         console.error('Error deleting stop:', error);
         alert('Failed to delete stop.');
       } else {
-        setFavoriteStops(favoriteStops.filter(stop => stop.id !== stopId));
+        setFavoriteStops(favoriteStops.filter((stop) => stop.id !== stopId));
       }
     }
   };
 
   // Find the route details for a departure
   const findRouteDetails = (stopData: StopData, routeId: string): Route | undefined => {
-    return stopData.routes.find(route => route.id === routeId);
+    return stopData.routes.find((route) => route.id === routeId);
   };
 
   return (
     <div className="container mx-auto p-4 max-w-3xl">
       <h1 className="text-3xl font-bold text-center my-4">Your Favorite Stops</h1>
-      
+
       <div className="flex justify-between items-center mb-6">
         <ThemeToggle />
         <AddButton isAddingStop={isAddingStop} onClick={() => setIsAddingStop(!isAddingStop)} />
       </div>
-      
+
       {isAddingStop && (
-        <AddStopForm
-          stopUrl={stopUrl}
-          setStopUrl={setStopUrl}
-          onAdd={addFavoriteStop}
-          loading={loading}
-        />
+        <AddStopForm stopUrl={stopUrl} setStopUrl={setStopUrl} onAdd={addFavoriteStop} loading={loading} />
       )}
-      
+
       <ul className="list-none space-y-6">
         {favoriteStops.length === 0 ? (
           <li className={`card p-2 ${isDarkTheme ? 'bg-base-300' : 'bg-base-100'} shadow-xl`}>
@@ -183,15 +178,12 @@ const Dashboard: React.FC = () => {
                 <div className="flex justify-between items-center p-4 border-b space-x-4">
                   <h2 className="card-title">{stop.name}</h2>
                   <div className="card-actions">
-                    <button 
-                      onClick={() => deleteFavoriteStop(stop.id)}
-                      className="btn btn-sm btn-outline"
-                    >
+                    <button onClick={() => deleteFavoriteStop(stop.id)} className="btn btn-sm btn-outline">
                       Remove
                     </button>
                   </div>
                 </div>
-                
+
                 <div className="px-4">
                   {!stopData[stop.stop_id] ? (
                     <div className="flex justify-center items-center py-4">
@@ -212,6 +204,6 @@ const Dashboard: React.FC = () => {
       </ul>
     </div>
   );
-}
+};
 
 export default Dashboard;

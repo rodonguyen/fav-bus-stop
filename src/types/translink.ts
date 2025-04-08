@@ -45,4 +45,4 @@ export interface StopData {
   routes: Route[];
   departures: Departure[];
   serviceAlerts: ServiceAlerts;
-} 
+}

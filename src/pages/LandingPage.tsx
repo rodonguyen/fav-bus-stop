@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useTheme } from '../context/ThemeContext';
-import ThemeToggle from '../components/ThemeToggle';
-import AuthModal from '../components/AuthModal';
 
+import AuthModal from '../components/AuthModal';
+import ThemeToggle from '../components/ThemeToggle';
+import { useTheme } from '../context/ThemeContext';
 
 const LandingPage: React.FC = () => {
   const { isDarkTheme } = useTheme();
@@ -16,17 +16,14 @@ const LandingPage: React.FC = () => {
     setIsAuthModalOpen(false);
   };
 
-  return ( 
+  return (
     <>
       <div className="container mx-auto">
         <header className="flex justify-between items-center mb-12 p-8 lg:max-w-4xl lg:mx-auto relative">
           <h1 className="text-3xl font-bold">Fav Stop</h1>
           <div className="flex items-center">
             <ThemeToggle className="mr-4" />
-            <button 
-              onClick={handleLoginClick}
-              className="btn btn-primary"
-            >
+            <button onClick={handleLoginClick} className="btn btn-primary">
               Login
             </button>
           </div>
@@ -38,21 +35,18 @@ const LandingPage: React.FC = () => {
             <div className="hero-content flex-col lg:flex-row px-0">
               <div className="max-w-md p-6">
                 <h1 className="text-5xl font-bold">One Place for all Your Stops</h1>
-                <p className="py-2">
-                  Keep track of your favorite bus stops and see real-time departure information.
-                </p>
+                <p className="py-2">Keep track of your favorite bus stops and see real-time departure information.</p>
                 <p className="pb-6 text-secondary">
                   Ever thought "I JUST WANT to know when my bus arrives"? This app is for you 👍
                 </p>
-                <button 
-                  className="btn btn-primary" 
-                  onClick={handleLoginClick}
-                >
+                <button className="btn btn-primary" onClick={handleLoginClick}>
                   Get Started
                 </button>
               </div>
-              
-              <div className={`card w-full max-w-md ${isDarkTheme ? 'bg-base-300' : 'bg-base-100'} shadow-xl ml-0 lg:ml-8`}>
+
+              <div
+                className={`card w-full max-w-md ${isDarkTheme ? 'bg-base-300' : 'bg-base-100'} shadow-xl ml-0 lg:ml-8`}
+              >
                 <div className="card-body p-0">
                   <div className="overflow-x-auto">
                     <table className="table table-zebra w-full">
@@ -71,7 +65,9 @@ const LandingPage: React.FC = () => {
                           </td>
                           <td className="align-top">
                             <div className="flex items-start">
-                              <span>✅ All you need for your <b>frequent routes</b></span>
+                              <span>
+                                ✅ All you need for your <b>frequent routes</b>
+                              </span>
                             </div>
                           </td>
                         </tr>
@@ -95,7 +91,9 @@ const LandingPage: React.FC = () => {
                           </td>
                           <td className="align-top">
                             <div className="flex items-start">
-                              <span>✅ Know if your bus is <b>5-minute early</b></span>
+                              <span>
+                                ✅ Know if your bus is <b>5-minute early</b>
+                              </span>
                             </div>
                           </td>
                         </tr>
@@ -120,10 +118,10 @@ const LandingPage: React.FC = () => {
           </div>
         </main>
       </div>
-      
+
       <AuthModal isOpen={isAuthModalOpen} onClose={handleCloseAuthModal} />
     </>
   );
-}
+};
 
-export default LandingPage; 
+export default LandingPage;

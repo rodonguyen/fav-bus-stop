@@ -7,4 +7,4 @@ export interface ImportMetaEnv {
 
 export interface ImportMeta {
   readonly env: ImportMetaEnv;
-} 
+}

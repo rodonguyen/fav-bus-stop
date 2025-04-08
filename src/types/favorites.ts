@@ -5,4 +5,4 @@ export interface FavoriteStop {
   name: string;
   stop_id: string;
   user_id: string;
-} 
+}

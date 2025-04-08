@@ -8,12 +8,9 @@ interface AddButtonProps {
 export const AddButton: React.FC<AddButtonProps> = ({ isAddingStop, onClick }) => {
   return (
     <div className="mb-6 flex justify-end">
-      <button 
-        onClick={onClick}
-        className={`btn btn-circle ${isAddingStop ? 'btn-error' : 'btn-primary'}`}
-      >
+      <button onClick={onClick} className={`btn btn-circle ${isAddingStop ? 'btn-error' : 'btn-primary'}`}>
         {isAddingStop ? '×' : '+'}
       </button>
     </div>
   );
-}; 
+};
