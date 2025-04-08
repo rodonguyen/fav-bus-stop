@@ -186,9 +186,9 @@ const Dashboard: React.FC = () => {
 
                 <div className="px-4">
                   {!stopData[stop.stop_id] ? (
-                    <div className="flex justify-center items-center py-4">
-                      <div className="loading loading-spinner loading-md"></div>
-                      <p className="ml-2 text-base-content/60">Loading bus schedules...</p>
+                    <div className="flex justify-center items-center py-4 mx-auto">
+                      <span className="loading loading-spinner loading-md"></span>
+                      <span className="ml-2 text-base-content/60">Loading bus schedules...</span>
                     </div>
                   ) : (
                     <DeparturesTable
