@@ -5,11 +5,12 @@ interface AddStopFormProps {
   setStopUrl: (url: string) => void;
   onAdd: () => void;
   loading: boolean;
+  className?: string;
 }
 
-export const AddStopForm: React.FC<AddStopFormProps> = ({ stopUrl, setStopUrl, onAdd, loading }) => {
+export const AddStopForm: React.FC<AddStopFormProps> = ({ stopUrl, setStopUrl, onAdd, loading, className }) => {
   return (
-    <div className="card bg-base-200 shadow-xl mb-6">
+    <div className={`card bg-base-adaptive-100 shadow-xl mb-6 ${className}`}>
       <div className="card-body">
         <h2 className="card-title">Add Favorite Stop</h2>
         <p className="text-sm mb-2">

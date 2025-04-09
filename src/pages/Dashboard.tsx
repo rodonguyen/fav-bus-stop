@@ -6,8 +6,8 @@ import { AddButton } from '../components/AddButton';
 import { AddStopForm } from '../components/AddStopForm';
 import { DeparturesTable } from '../components/DeparturesTable';
 import ThemeToggle from '../components/ThemeToggle';
-import { useTheme } from '../context/ThemeContext';
 import useRefreshTimer from '../hooks/useRefreshTimer';
+import AdaptiveStyles from '../styles/adaptiveStyles';
 import { FavoriteStop, Route, StopTimetable } from '../types';
 
 const Dashboard: React.FC = () => {
@@ -21,6 +21,8 @@ const Dashboard: React.FC = () => {
       await fetchStopData();
     },
   });
+
+  const adaptiveStyles = AdaptiveStyles();
 
   const fetchStopData = async (stopsToFetch?: FavoriteStop[]) => {
     const data: Record<string, StopTimetable> = {};
@@ -37,9 +39,6 @@ const Dashboard: React.FC = () => {
     }
     setStopData(data);
   };
-
-  // Get theme state from context
-  const { isDarkTheme } = useTheme();
 
   useEffect(() => {
     const fetchFavoriteStops = async () => {
@@ -120,7 +119,7 @@ const Dashboard: React.FC = () => {
     <div className="container mx-auto p-4 max-w-3xl">
       <h1 className="text-3xl font-bold text-center mt-4 mb-8">Your Favorite Stops</h1>
 
-      <div className="flex justify-between items-center mb-2">
+      <div className="flex justify-between items-center mb-4">
         <ThemeToggle />
         <div className="flex items-center gap-3">
           <div
@@ -132,20 +131,24 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {isAddingStop && (
-        <AddStopForm stopUrl={stopUrl} setStopUrl={setStopUrl} onAdd={addFavoriteStop} loading={loading} />
-      )}
+      <AddStopForm
+        className={isAddingStop ? '' : 'hidden'}
+        stopUrl={stopUrl}
+        setStopUrl={setStopUrl}
+        onAdd={addFavoriteStop}
+        loading={loading}
+      />
 
       <ul className="list-none space-y-6">
         {favoriteStops.length === 0 ? (
-          <li className={`card p-2 ${isDarkTheme ? 'bg-base-300' : 'bg-base-100'} shadow-xl`}>
+          <li className={`card p-2 ${adaptiveStyles['bg-base-adaptive-100']} shadow-xl`}>
             <div className="card-body items-center text-center">
               <p>No favorite stops yet. Add your first stop with the + button.</p>
             </div>
           </li>
         ) : (
           favoriteStops.map((stop) => (
-            <li key={stop.id} className={`card p-2 ${isDarkTheme ? 'bg-base-300' : 'bg-base-100'} shadow-xl`}>
+            <li key={stop.id} className={`card p-2 ${adaptiveStyles['bg-base-adaptive-100']} shadow-xl`}>
               <div className="card-body p-0">
                 <div className="flex justify-between items-center p-4 border-b space-x-4">
                   <h2 className="card-title">{stop.name}</h2>
@@ -156,7 +159,7 @@ const Dashboard: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="px-4">
+                <div>
                   {!stopData[stop.stop_id] ? (
                     <div className="flex justify-center items-center py-4 mx-auto">
                       <span className="loading loading-spinner loading-md"></span>

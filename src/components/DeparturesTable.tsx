@@ -55,10 +55,20 @@ export const DeparturesTable: React.FC<DeparturesTableProps> = ({ departures, fi
               departure.realtime?.expectedDepartureUtc
             );
 
+            const displayExpectedDeparture = departure.realtime?.expectedDepartureUtc
+              ? '(' +
+                new Date(departure.realtime.expectedDepartureUtc).toLocaleTimeString('en-US', {
+                  timeStyle: 'short',
+                }) +
+                ')'
+              : '';
+
             return (
               <tr key={departure.id}>
                 <td className="font-medium">{departure.headsign}</td>
-                <td>{departure.departureDescription}</td>
+                <td>
+                  {departure.departureDescription} &nbsp;{displayExpectedDeparture}
+                </td>
                 <td className="text-right">
                   {departure.realtime?.isCancelled ? (
                     <span className="text-error font-medium">Cancelled</span>

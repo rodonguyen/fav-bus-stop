@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 
 import AuthModal from '../components/AuthModal';
 import ThemeToggle from '../components/ThemeToggle';
-import { useTheme } from '../context/ThemeContext';
+import AdaptiveStyles from '../styles/adaptiveStyles';
 
 const LandingPage: React.FC = () => {
-  const { isDarkTheme } = useTheme();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const adaptiveStyles = AdaptiveStyles();
 
   const handleLoginClick = () => {
     setIsAuthModalOpen(true);
@@ -44,9 +44,7 @@ const LandingPage: React.FC = () => {
                 </button>
               </div>
 
-              <div
-                className={`card w-full max-w-md ${isDarkTheme ? 'bg-base-300' : 'bg-base-100'} shadow-xl ml-0 lg:ml-8`}
-              >
+              <div className={`card w-full max-w-md ${adaptiveStyles['bg-base-adaptive-100']} shadow-xl ml-0 lg:ml-8`}>
                 <div className="card-body p-0">
                   <div className="overflow-x-auto">
                     <table className="table table-zebra w-full">
@@ -92,7 +90,7 @@ const LandingPage: React.FC = () => {
                           <td className="align-top">
                             <div className="flex items-start">
                               <span>
-                                ✅ Know if your bus is <b>5-minute early</b>
+                                ✅ Know if your bus is <b>3-minute early</b>
                               </span>
                             </div>
                           </td>
