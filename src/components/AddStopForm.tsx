@@ -1,5 +1,7 @@
 import React from 'react';
 
+import AdaptiveStyles from '../styles/adaptiveStyles';
+
 interface AddStopFormProps {
   stopUrl: string;
   setStopUrl: (url: string) => void;
@@ -9,8 +11,10 @@ interface AddStopFormProps {
 }
 
 export const AddStopForm: React.FC<AddStopFormProps> = ({ stopUrl, setStopUrl, onAdd, loading, className }) => {
+  const adaptiveStyles = AdaptiveStyles();
+
   return (
-    <div className={`card bg-base-adaptive-100 shadow-xl mb-6 ${className}`}>
+    <div className={`card ${adaptiveStyles['bg-base-adaptive-100']} shadow-xl mb-6 ${className}`}>
       <div className="card-body">
         <h2 className="card-title">Add Favorite Stop</h2>
         <p className="text-sm mb-2">

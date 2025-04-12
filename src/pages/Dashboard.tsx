@@ -117,7 +117,10 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4 max-w-3xl">
-      <h1 className="text-3xl font-bold text-center mt-4 mb-8">Your Favorite Stops</h1>
+      <div className="relative">
+        <h1 className="text-3xl font-bold text-center mt-4 mb-8">Your Favorite Stops</h1>
+        <div className="absolute left-1/2 -translate-y-[-0.4rem] -translate-x-1/2 bottom-0 w-screen h-[1px] bg-gradient-to-r from-transparent via-base-content/20 to-transparent"></div>
+      </div>
 
       <div className="flex justify-between items-center mb-4">
         <ThemeToggle />

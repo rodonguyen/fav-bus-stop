@@ -9,6 +9,7 @@
 - X Replace author content, refactor some color for each theme (using tailwind classname)
 - X Add hour column
 - Post on reddit/threads/...
+- Use root Dark class, then build custom classname style .dark.bg-base-adaptive-100 red green
 - Try it now mode, allowing people to try it without login
 - Donate link
 - Add train station support
