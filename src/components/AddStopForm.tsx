@@ -1,17 +1,55 @@
-import React from 'react';
+import React, { useState } from 'react';
 
+import { supabaseApi } from '../api/supabaseApi';
+import { translinkApi } from '../api/translinkApi';
 import AdaptiveStyles from '../styles/adaptiveStyles';
 
 interface AddStopFormProps {
-  stopUrl: string;
-  setStopUrl: (url: string) => void;
-  onAdd: () => void;
-  loading: boolean;
+  onAddSuccess: () => void;
   className?: string;
 }
 
-export const AddStopForm: React.FC<AddStopFormProps> = ({ stopUrl, setStopUrl, onAdd, loading, className }) => {
+export const AddStopForm: React.FC<AddStopFormProps> = ({ onAddSuccess, className }) => {
+  const [stopUrl, setStopUrl] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
   const adaptiveStyles = AdaptiveStyles();
+
+  const extractStopId = (url: string): string | null => {
+    const regex = /\/stops\/([^/?#]+)/; // extracts any characters after /stops/
+    const match = url.match(regex);
+    return match ? match[1] : null;
+  };
+
+  const addFavoriteStop = async () => {
+    setLoading(true);
+
+    const stopId = extractStopId(stopUrl);
+    if (!stopId) {
+      alert('Invalid URL. Please enter a valid Translink stop URL.');
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const stopTimetable = await translinkApi.getStopTimetable(stopId);
+
+      if (!stopTimetable || !stopTimetable.name) {
+        alert('Could not fetch stop information. Please try again.');
+        setLoading(false);
+        return;
+      }
+
+      await supabaseApi.addFavoriteStop(stopId, stopTimetable.name);
+
+      onAddSuccess();
+      setStopUrl('');
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Failed to add stop to favorites.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className={`card ${adaptiveStyles['bg-base-adaptive-100']} shadow-xl mb-6 ${className}`}>
@@ -40,7 +78,7 @@ export const AddStopForm: React.FC<AddStopFormProps> = ({ stopUrl, setStopUrl, o
           <p className="text-base-content/80">Example: https://jp.translink.com.au/plan-your-journey/stops/002023</p>
         </div>
         <div className="card-actions justify-end mt-2">
-          <button onClick={onAdd} disabled={loading} className="btn btn-primary">
+          <button onClick={addFavoriteStop} disabled={loading} className="btn btn-primary">
             {loading ? <span className="loading loading-spinner loading-sm"></span> : 'Add'}
           </button>
         </div>

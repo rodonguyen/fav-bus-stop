@@ -8,14 +8,12 @@ import { DeparturesTable } from '../components/DeparturesTable';
 import ThemeToggle from '../components/ThemeToggle';
 import useRefreshTimer from '../hooks/useRefreshTimer';
 import AdaptiveStyles from '../styles/adaptiveStyles';
-import { FavoriteStop, Route, StopTimetable } from '../types';
+import { BusRoute, BusTimetable, FavoriteStop } from '../types';
 
 const Dashboard: React.FC = () => {
   const [favoriteStops, setFavoriteStops] = useState<FavoriteStop[]>([]);
-  const [stopData, setStopData] = useState<Record<string, StopTimetable>>({});
+  const [stopData, setStopData] = useState<Record<string, BusTimetable>>({});
   const [isAddingStop, setIsAddingStop] = useState<boolean>(false);
-  const [stopUrl, setStopUrl] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
   const { progress } = useRefreshTimer({
     onComplete: async () => {
       await fetchStopData();
@@ -25,7 +23,7 @@ const Dashboard: React.FC = () => {
   const adaptiveStyles = AdaptiveStyles();
 
   const fetchStopData = async (stopsToFetch?: FavoriteStop[]) => {
-    const data: Record<string, StopTimetable> = {};
+    const data: Record<string, BusTimetable> = {};
     // Use passed stops or fall back to state if not provided
     const stops = stopsToFetch || favoriteStops;
 
@@ -52,50 +50,18 @@ const Dashboard: React.FC = () => {
     };
 
     fetchFavoriteStops();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const extractStopId = (url: string): string | null => {
-    // Extract stop ID from URLs like https://jp.translink.com.au/plan-your-journey/stops/002023
-    const regex = /stops\/(\d+)/;
-    const match = url.match(regex);
-    return match ? match[1] : null;
-  };
-
-  const addFavoriteStop = async () => {
-    setLoading(true);
-
-    const stopId = extractStopId(stopUrl);
-    if (!stopId) {
-      alert('Invalid URL. Please enter a valid Translink stop URL.');
-      setLoading(false);
-      return;
-    }
-
+  // New handler for successful addition
+  const handleAddStopSuccess = async () => {
     try {
-      // Fetch stop data from the API
-      const stopTimetable = await translinkApi.getStopTimetable(stopId);
-
-      if (!stopTimetable || !stopTimetable.name) {
-        alert('Could not fetch stop information. Please try again.');
-        setLoading(false);
-        return;
-      }
-
-      // Add to favorites using supabaseApi
-      await supabaseApi.addFavoriteStop(stopId, stopTimetable.name);
-
-      // Refresh favorites
       const favorites = await supabaseApi.getFavoriteStops();
       setFavoriteStops(favorites);
-      setStopUrl('');
       setIsAddingStop(false);
     } catch (error) {
-      console.error('Error:', error);
-      alert('Failed to add stop to favorites.');
+      console.error('Error refreshing favorites after add:', error);
+      alert('Failed to refresh favorites list after adding stop.');
     }
-
-    setLoading(false);
   };
 
   const deleteFavoriteStop = async (stopId: string) => {
@@ -111,7 +77,7 @@ const Dashboard: React.FC = () => {
   };
 
   // Find the route details for a departure
-  const findRouteDetails = (stopData: StopTimetable, routeId: string): Route | undefined => {
+  const findRouteDetails = (stopData: BusTimetable, routeId: string): BusRoute | undefined => {
     return stopData.routes.find((route) => route.id === routeId);
   };
 
@@ -134,13 +100,7 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      <AddStopForm
-        className={isAddingStop ? '' : 'hidden'}
-        stopUrl={stopUrl}
-        setStopUrl={setStopUrl}
-        onAdd={addFavoriteStop}
-        loading={loading}
-      />
+      <AddStopForm className={isAddingStop ? '' : 'hidden'} onAddSuccess={handleAddStopSuccess} />
 
       <ul className="list-none space-y-6">
         {favoriteStops.length === 0 ? (

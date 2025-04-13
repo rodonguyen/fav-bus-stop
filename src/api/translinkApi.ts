@@ -1,4 +1,4 @@
-import { StopTimetable } from '../types/translink';
+import { BusTimetable } from '../types/translink/bus';
 
 class TranslinkApi {
   private static instance: TranslinkApi;
@@ -29,9 +29,9 @@ class TranslinkApi {
    * @returns Promise<StopTimetable> - The timetable data for the stop
    * @throws Error if the API request fails
    */
-  public async getStopTimetable(stopId: string): Promise<StopTimetable> {
+  public async getStopTimetable(stopId: string): Promise<BusTimetable> {
     try {
-      return await this.get<StopTimetable>(`/stop/timetable/${stopId}`);
+      return await this.get<BusTimetable>(`/stop/timetable/${stopId}`);
     } catch (error) {
       console.error(`Failed to fetch timetable for stop ${stopId}:`, error);
       throw error;
