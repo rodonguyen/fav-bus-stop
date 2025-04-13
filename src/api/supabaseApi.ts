@@ -52,6 +52,8 @@ class SupabaseApi {
           stop_id: stopId,
           name,
           user_id: session.user.id,
+          transport_type: 'bus',
+          created_at: new Date().toISOString(),
         },
       ])
       .select()

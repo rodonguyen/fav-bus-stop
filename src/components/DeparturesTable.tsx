@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { Departure, Route } from '../types';
+import { BusDeparture, BusRoute } from '../types';
 
 interface DeparturesTableProps {
-  departures: Departure[];
-  findRouteDetails: (routeId: string) => Route | undefined;
+  departures: BusDeparture[];
+  findRouteDetails: (routeId: string) => BusRoute | undefined;
 }
 
 /**
