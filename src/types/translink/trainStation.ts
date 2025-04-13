@@ -1,5 +1,7 @@
 import { Position, Realtime, ServiceAlerts } from './common';
 
+// This is not used as reusing BusType is ok right
+
 export interface TrainPlatformStop {
   id: string;
   name: string;

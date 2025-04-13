@@ -15,7 +15,7 @@ export const AddStopForm: React.FC<AddStopFormProps> = ({ onAddSuccess, classNam
   const adaptiveStyles = AdaptiveStyles();
 
   const extractStopId = (url: string): string | null => {
-    const regex = /stops\/(\d+)/;
+    const regex = /\/stops\/([^/?#]+)/; // extracts any characters after /stops/
     const match = url.match(regex);
     return match ? match[1] : null;
   };

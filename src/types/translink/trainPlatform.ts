@@ -1,6 +1,8 @@
 import { Position, ServiceAlerts } from './common';
 import { TrainDeparture, TrainRoute } from './trainStation';
 
+// This is not used as reusing BusType is ok right
+
 export interface TrainStationInfo {
   id: string; // Parent Station ID (e.g., "ST:place_sbasta")
   name: string;
