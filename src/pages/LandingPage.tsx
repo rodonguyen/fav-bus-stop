@@ -27,7 +27,7 @@ const LandingPage: React.FC = () => {
               Login
             </button>
           </div>
-          <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-screen h-[1px] bg-gradient-to-r from-transparent via-base-content/20 to-transparent"></div>
+          <div className="absolute left-1/2 translate-x-[-50%] bottom-0 w-[95vw] h-[1px] bg-gradient-to-r from-transparent via-base-content/20 to-transparent"></div>
         </header>
 
         <main className="pb-8">

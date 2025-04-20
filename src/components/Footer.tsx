@@ -19,11 +19,8 @@ export const Footer: React.FC = () => {
       </nav>
       <nav>
         <h6 className="footer-title">Company</h6>
-        <a className="link link-hover" href="https://www.rodonguyen.dev" target="_blank" rel="noopener noreferrer">
-          About the author
-        </a>
-        <a className="link link-hover" href="https://www.beacons.ai/rodo8888" target="_blank" rel="noopener noreferrer">
-          Contact
+        <a className="link link-hover" href="https://rodonguyen.dev" target="_blank" rel="noopener noreferrer">
+          About me
         </a>
       </nav>
       <nav className="text-neutral-content/40">
