@@ -9,6 +9,7 @@ import ThemeToggle from '../components/ThemeToggle';
 import useRefreshTimer from '../hooks/useRefreshTimer';
 import AdaptiveStyles from '../styles/adaptiveStyles';
 import { BusRoute, BusTimetable, FavoriteStop } from '../types';
+import ControlBar from './ControlBar';
 
 const Dashboard: React.FC = () => {
   const [favoriteStops, setFavoriteStops] = useState<FavoriteStop[]>([]);
@@ -88,17 +89,7 @@ const Dashboard: React.FC = () => {
         <div className="absolute left-1/2 -translate-y-[-0.4rem] -translate-x-1/2 bottom-0 w-[95vw] h-[1px] bg-gradient-to-r from-transparent via-base-content/20 to-transparent"></div>
       </div>
 
-      <div className="flex justify-between items-center mb-4">
-        <ThemeToggle />
-        <div className="flex items-center gap-3">
-          <div
-            className="radial-progress text-primary"
-            style={{ '--value': progress, '--size': '2.4rem', '--thickness': '0.6rem' } as React.CSSProperties}
-            role="progressbar"
-          ></div>
-          <AddButton className="my-auto" isAddingStop={isAddingStop} onClick={() => setIsAddingStop(!isAddingStop)} />
-        </div>
-      </div>
+      <ControlBar progress={progress} isAddingStop={isAddingStop} setIsAddingStop={setIsAddingStop} />
 
       <AddStopForm className={isAddingStop ? '' : 'hidden'} onAddSuccess={handleAddStopSuccess} />
 
