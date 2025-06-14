@@ -6,7 +6,7 @@ export const Footer: React.FC = () => {
   return (
     <footer className="footer sm:footer-horizontal bg-neutral text-neutral-content p-10 lg:px-[14rem]">
       <nav className="gap-y-4 flex flex-col">
-        <p className="text-neutral-content/60">Made with ❤️ and hatred of lags in smart phone map apps</p>
+        <p className="text-neutral-content/60">Made with ❤️ and hatred of lags in map apps</p>
         <a
           className="link link-hover flex items-center gap-2"
           href="https://ko-fi.com/rodo8888"

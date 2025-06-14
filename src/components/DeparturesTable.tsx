@@ -40,7 +40,7 @@ export const DeparturesTable: React.FC<DeparturesTableProps> = ({ departures, fi
 
   return (
     <div className="overflow-x-auto">
-      <table className="table">
+      <table className="table table-sm">
         <thead>
           <tr>
             <th>Route</th>

@@ -31,13 +31,13 @@ const ControlBar: React.FC<ControlBarProps> = ({ progress, isAddingStop, setIsAd
 
   return (
     <div
-      className="sticky top-0 z-10 bg-base-100/80 backdrop-blur-sm transition-all duration-200"
+      className="sticky top-0 z-10 bg-base-100/80 backdrop-blur-sm"
       style={{
         paddingTop: `${16 * (1 - scrollProgress)}px`,
         paddingBottom: `${16 * (1 - scrollProgress)}px`,
       }}
     >
-      <div className="flex justify-between items-center transition-all duration-200">
+      <div className="flex justify-between items-center">
         <ThemeToggle style={{ transform: `scale(${getScale()})` }} />
         <div className="flex items-center gap-3">
           <RefreshProgressCircle
@@ -51,7 +51,7 @@ const ControlBar: React.FC<ControlBarProps> = ({ progress, isAddingStop, setIsAd
             }
           />
           <AddButton
-            className="my-auto transition-all duration-200"
+            className="my-auto"
             style={{ transform: `scale(${getScale()})` }}
             isAddingStop={isAddingStop}
             onClick={() => setIsAddingStop(!isAddingStop)}

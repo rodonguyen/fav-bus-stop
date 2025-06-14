@@ -2,10 +2,8 @@ import React, { useEffect, useState } from 'react';
 
 import { supabaseApi } from '../api/supabaseApi';
 import { translinkApi } from '../api/translinkApi';
-import { AddButton } from '../components/AddButton';
 import { AddStopForm } from '../components/AddStopForm';
 import { DeparturesTable } from '../components/DeparturesTable';
-import ThemeToggle from '../components/ThemeToggle';
 import useRefreshTimer from '../hooks/useRefreshTimer';
 import AdaptiveStyles from '../styles/adaptiveStyles';
 import { BusRoute, BusTimetable, FavoriteStop } from '../types';
@@ -104,7 +102,7 @@ const Dashboard: React.FC = () => {
           favoriteStops.map((stop) => (
             <li key={stop.id} className={`card p-2 ${adaptiveStyles['bg-base-adaptive-100']} shadow-xl`}>
               <div className="card-body p-0">
-                <div className="flex justify-between items-center p-4 border-b space-x-4">
+                <div className="flex justify-between items-center p-3 border-b space-x-4">
                   <h2 className="card-title">{stop.name}</h2>
                   <div className="card-actions">
                     <button onClick={() => deleteFavoriteStop(stop.id)} className="btn btn-sm btn-outline">
@@ -115,9 +113,15 @@ const Dashboard: React.FC = () => {
 
                 <div>
                   {!stopData[stop.stop_id] ? (
-                    <div className="flex justify-center items-center py-4 mx-auto">
-                      <span className="loading loading-spinner loading-md"></span>
-                      <span className="ml-2 text-base-content/60">Loading bus schedules...</span>
+                    // skeleton loading
+                    <div className="flex flex-col items-center py-4 mx-auto w-full gap-2">
+                      <div className="flex w-full flex-col gap-2 gap-y-4">
+                        <div className="skeleton h-6 w-full"></div>
+                        <div className="skeleton h-6 w-full"></div>
+                        <div className="skeleton h-6 w-full"></div>
+                        <div className="skeleton h-6 w-full"></div>
+                        <div className="skeleton h-6 w-full"></div>
+                      </div>
                     </div>
                   ) : (
                     <DeparturesTable
