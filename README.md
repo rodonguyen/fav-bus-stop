@@ -1,6 +1,15 @@
 # FavStop
 
-# TODOs:
+## Getting Started
+
+```
+yarn install
+yarn prepare # prepare husky hook
+# add .env (check out .env.example)
+yarn dev
+```
+
+## TODOs:
 
 - X Landing page: why use FavStop
 - X Login with Google
